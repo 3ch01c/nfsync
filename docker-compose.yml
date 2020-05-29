@@ -1,0 +1,28 @@
+version: "3.7"
+services:
+  nfsync:
+    image: nfsync
+    build:
+      context: .
+      args:
+        - http_proxy
+        - https_proxy
+        - no_proxy
+    network_mode: "host"
+    privileged: true
+    environment:
+      - SERVER=example.com
+      - SHARE=data
+      - http_proxy
+      - https_proxy
+      - no_proxy
+    volumes:
+      - /data:/data
+    command:
+      - -aHAX
+      - --numeric-ids
+      - --progress
+      - -e
+      - "ssh -T -c aes128-gcm@openssh.com -o Compression=no -x"
+      - /mnt/nfs/example.com/data/
+      - /data
